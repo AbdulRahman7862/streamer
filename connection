@@ -1,0 +1,6 @@
+username = doadmin
+password = ************************ show
+host = db-mysql-tor1-16136-do-user-18712550-0.d.db.ondigitalocean.com
+port = 25060
+database = defaultdb
+sslmode = REQUIRED

@@ -1,0 +1,60 @@
+[05-Feb-2025 09:55:52 Europe/Berlin] [Proxy Debug] Script started
+[05-Feb-2025 09:55:52 Europe/Berlin] [Proxy Debug] Alias: 23be1472aa09cce9
+[05-Feb-2025 09:55:52 Europe/Berlin] [Proxy Debug] Session URL Map: Array
+(
+    [f9adfc366f3174a3] => https://www.vidbinge.com/
+    [e24738119f27f102] => https://www.vidbinge.com/
+    [73941d005eba1ce2] => https://www.vidbinge.com/
+    [0d8bb39842033f76] => https://www.vidbinge.com/
+    [32e01c0aaa6063af] => https://www.vidbinge.com/
+    [008e747085ea66c8] => https://www.vidbinge.com/
+    [f1374946142dc7db] => https://www.vidbinge.com/
+    [e1458412ab47b578] => https://www.vidbinge.com/
+    [4ae91a56192dad60] => https://www.vidbinge.com/
+    [3d3971fc298a3b3b] => https://www.vidbinge.com/
+    [3c597ec5725f6d2d] => https://www.vidbinge.com/
+    [0f60468549b897cf] => https://www.vidbinge.com/
+    [ba88387e98180f3e] => https://www.vidbinge.com/
+    [dc5c3f9c9a27334f] => https://www.vidbinge.com/
+    [deac74c3fe43df0b] => https://www.vidbinge.com/
+    [23be1472aa09cce9] => https://www.vidbinge.com/
+)
+
+[05-Feb-2025 09:55:52 Europe/Berlin] [Proxy Debug] Target URL: https://www.vidbinge.com/
+[05-Feb-2025 09:55:52 Europe/Berlin] [Proxy Debug] Initiating cURL request
+[05-Feb-2025 09:56:02 Europe/Berlin] [Proxy Debug] HTTP Code: 200
+[05-Feb-2025 09:56:02 Europe/Berlin] [Proxy Debug] Content Type: text/html
+[05-Feb-2025 09:56:02 Europe/Berlin] [Proxy Debug] Response Length: 15843
+[05-Feb-2025 09:56:02 Europe/Berlin] [Proxy Debug] Set content type header: text/html
+[05-Feb-2025 09:56:02 Europe/Berlin] [Proxy Debug] Outputting response
+[05-Feb-2025 09:56:02 Europe/Berlin] [Proxy Debug] Script completed
+[05-Feb-2025 09:56:38 Europe/Berlin] [Proxy Debug] Script started
+[05-Feb-2025 09:56:38 Europe/Berlin] [Proxy Debug] Alias: 23be1472aa09cce9
+[05-Feb-2025 09:56:38 Europe/Berlin] [Proxy Debug] Session URL Map: Array
+(
+    [f9adfc366f3174a3] => https://www.vidbinge.com/
+    [e24738119f27f102] => https://www.vidbinge.com/
+    [73941d005eba1ce2] => https://www.vidbinge.com/
+    [0d8bb39842033f76] => https://www.vidbinge.com/
+    [32e01c0aaa6063af] => https://www.vidbinge.com/
+    [008e747085ea66c8] => https://www.vidbinge.com/
+    [f1374946142dc7db] => https://www.vidbinge.com/
+    [e1458412ab47b578] => https://www.vidbinge.com/
+    [4ae91a56192dad60] => https://www.vidbinge.com/
+    [3d3971fc298a3b3b] => https://www.vidbinge.com/
+    [3c597ec5725f6d2d] => https://www.vidbinge.com/
+    [0f60468549b897cf] => https://www.vidbinge.com/
+    [ba88387e98180f3e] => https://www.vidbinge.com/
+    [dc5c3f9c9a27334f] => https://www.vidbinge.com/
+    [deac74c3fe43df0b] => https://www.vidbinge.com/
+    [23be1472aa09cce9] => https://www.vidbinge.com/
+)
+
+[05-Feb-2025 09:56:38 Europe/Berlin] [Proxy Debug] Target URL: https://www.vidbinge.com/
+[05-Feb-2025 09:56:38 Europe/Berlin] [Proxy Debug] Initiating cURL request
+[05-Feb-2025 09:56:48 Europe/Berlin] [Proxy Debug] HTTP Code: 200
+[05-Feb-2025 09:56:48 Europe/Berlin] [Proxy Debug] Content Type: text/html
+[05-Feb-2025 09:56:48 Europe/Berlin] [Proxy Debug] Response Length: 15843
+[05-Feb-2025 09:56:48 Europe/Berlin] [Proxy Debug] Set content type header: text/html
+[05-Feb-2025 09:56:48 Europe/Berlin] [Proxy Debug] Outputting response
+[05-Feb-2025 09:56:48 Europe/Berlin] [Proxy Debug] Script completed
