@@ -354,7 +354,7 @@ class Proxy
 $allowedDomains = [
     'vidbinge.com',
     'novafork.com',
-    'catflix.su/home',
+    'catflix.su',
     'cinemadeck.com',
     'popcornmovies.to',
     'nepu.to',
