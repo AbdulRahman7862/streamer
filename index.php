@@ -49,12 +49,6 @@
                 <h2 class="section-header">Movies & Shows</h2>
 
                 <div class="icon-link">
-                    <?php list($alias, $token) = generateToken('https://novafork.com/'); ?>
-                    <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
-                        <img src="images/Vksv2027WvY.png" alt="Novafork Logo" class="icon">
-                    </a>
-                </div>
-                <div class="icon-link">
                     <?php list($alias, $token) = generateToken('https://catflix.su/home'); ?>
                     <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
                         <img src="images/catflix-dark.svg" alt="CatFlix Logo" class="icon">
@@ -141,26 +135,12 @@
 
                 </div>
 
-                <div class="icon-link">
-                    <?php list($alias, $token) = generateToken('https://gogoanime3.co/'); ?>
-                    <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
-                        <img src="images/logo_12.png" alt="GoGoAnime Logo" class="icon">
-                    </a>
-
-                </div>
             </div>
 
             <!-- Manga Section -->
             <div class="section">
                 <h2 class="section-header">Manga</h2>
-                <div class="icon-link">
-                    <?php list($alias, $token) = generateToken('https://mangadex.org/'); ?>
-                    <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
-                        <img src="images/jxl7y1724993726.png" alt="MangaDex Logo" class="icon">
-                    </a>
-
-                </div>
-
+                
                 <div class="icon-link">
                     <?php list($alias, $token) = generateToken('https://mangareader.to/home'); ?>
                     <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
