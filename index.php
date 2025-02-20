@@ -47,13 +47,6 @@
             <!-- Movies & Shows Section -->
             <div class="section">
                 <h2 class="section-header">Movies & Shows</h2>
-
-                <div class="icon-link">
-                    <?php list($alias, $token) = generateToken('https://catflix.su/home'); ?>
-                    <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
-                        <img src="images/catflix-dark.svg" alt="CatFlix Logo" class="icon">
-                    </a>
-                </div>
                 <div class="icon-link">
                     <?php list($alias, $token) = generateToken('https://www.popcornmovies.to/home'); ?>
                     <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
