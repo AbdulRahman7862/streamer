@@ -48,17 +48,12 @@
             <div class="section">
                 <h2 class="section-header">Movies & Shows</h2>
                 <div class="icon-link">
-                    <?php list($alias, $token) = generateToken('https://www.popcornmovies.to/home'); ?>
-                    <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
-                        <img src="images/logo-1723617006.png" alt="PopcornMovies Logo" class="icon">
-                    </a>
+                        <?php list($alias, $token) = generateToken('https://www.popcornmovies.to/home'); ?>
+                            <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
+                                <img src="images/logo-1723617006.png" alt="PopcornMovies Logo" class="icon">
+                            </a>
                 </div>
-                <!-- <div class="icon-link">
-                    <?//php list($alias, $token) = generateToken('https://www.rgshows.me/?p=1'); ?>
-                    <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
-                        <img src="images/logo.png" alt="RG Logo" class="icon">
-                    </a>
-                </div> -->
+             
                 <div class="icon-link">
                     <?php list($alias, $token) = generateToken('https://fmovies-hd.to/home/'); ?>
                     <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
@@ -66,12 +61,7 @@
                     </a>
 
                 </div>
-                <!-- <div class="icon-link">
-                    <?//php list($alias, $token) = generateToken('https://flixwave.watch/home/'); ?>
-                    <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">
-                        <img src="images/logo_1.png" alt="Flixwave Logo" class="icon">
-                    </a>
-                </div> -->
+               
                 <div class="icon-link">
                     <?php list($alias, $token) = generateToken('https://bflix.sh/home/'); ?>
                     <a href="proxy.php?alias=<?= $alias ?>&token=<?= $token ?>" target="_blank">

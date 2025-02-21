@@ -60,13 +60,15 @@ if (!isset($_SESSION['url_map'][$alias])) {
     exit("Alias not found.");
 }
 $targetUrl = $_SESSION['url_map'][$alias];
+// Optionally, for one-time use, you can remove the mapping:
+// unset($_SESSION['url_map'][$alias]);
 
 // --- Step 3. Define the Proxy Class ---
 class Proxy
 {
     private $targetUrl;
     private $allowedDomains;
-
+    
     public function __construct($url, array $allowedDomains = [])
     {
         $this->allowedDomains = $allowedDomains;
@@ -78,12 +80,12 @@ class Proxy
         }
         $this->targetUrl = $url;
     }
-
+    
     private function isValidUrl($url)
     {
         return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
-
+    
     private function isAllowedDomain($url)
     {
         if (empty($this->allowedDomains)) {
@@ -97,48 +99,41 @@ class Proxy
         }
         return false;
     }
-
+    
     public function process()
-{
-    try {
-        $method = $_SERVER['REQUEST_METHOD'];
-        $data = null;
-        if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
-            $data = file_get_contents('php://input');
-        }
-
-        // Fetch remote content (headers and body).
-        list($rawHeaders, $body) = $this->fetchRemote($method, $data);
-        $headers = $this->parseHeaders($rawHeaders);
-
-        // Send the status and response headers to the client.
-        $this->sendStatusHeader($headers);
-        $this->sendHeaders($headers);
-
-        // Check if the response is an image.
-        $contentType = $this->getHeaderValue($headers, 'Content-Type');
-        if ($contentType && stripos($contentType, 'image/') !== false) {
-            // Serve the image directly.
-            echo $body;
-            exit;
-        }
-
-        // Only rewrite HTML responses.
-        if ($contentType && stripos($contentType, 'text/html') !== false) {
-            $rewritten = $this->rewriteDocument($body);
-            if (trim($rewritten) !== '') {
-                $body = $rewritten;
+    {
+        try {
+            $method = $_SERVER['REQUEST_METHOD'];
+            $data = null;
+            if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+                $data = file_get_contents('php://input');
             }
+            
+            // Fetch remote content (headers and body).
+            list($rawHeaders, $body) = $this->fetchRemote($method, $data);
+            $headers = $this->parseHeaders($rawHeaders);
+            
+            // Send the status and response headers to the client.
+            $this->sendStatusHeader($headers);
+            $this->sendHeaders($headers);
+            
+            // Only rewrite HTML responses.
+            $contentType = $this->getHeaderValue($headers, 'Content-Type');
+            if ($contentType && stripos($contentType, 'text/html') !== false) {
+                $rewritten = $this->rewriteDocument($body);
+                if (trim($rewritten) !== '') {
+                    $body = $rewritten;
+                }
+            }
+            
+            echo $body;
+        } catch (Exception $ex) {
+            error_log("Proxy Error: " . $ex->getMessage());
+            header("HTTP/1.1 500 Internal Server Error");
+            exit("An error occurred while processing your request: " . $ex->getMessage());
         }
-
-        echo $body;
-    } catch (Exception $ex) {
-        error_log("Proxy Error: " . $ex->getMessage());
-        header("HTTP/1.1 500 Internal Server Error");
-        exit("An error occurred while processing your request: " . $ex->getMessage());
     }
-}
-
+    
     // Fetch the remote response and split headers from body.
     private function fetchRemote($method, $data = null)
     {
@@ -151,8 +146,9 @@ class Proxy
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] ?? 'PHP Proxy');
-        curl_setopt($ch, CURLOPT_ENCODING, ''); // Automatically decode compressed responses.
-
+        // Automatically decode compressed responses.
+        curl_setopt($ch, CURLOPT_ENCODING, '');
+        
         $forwardHeaders = $this->prepareRequestHeaders();
         if (!empty($forwardHeaders)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $forwardHeaders);
@@ -160,7 +156,7 @@ class Proxy
         if (in_array($method, ['POST', 'PUT', 'PATCH']) && $data !== null) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
-
+        
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
             throw new Exception("cURL error: " . curl_error($ch));
@@ -171,7 +167,7 @@ class Proxy
         $body = substr($response, $headerSize);
         return [$rawHeaders, $body];
     }
-
+    
     // Parse raw headers into an associative array.
     private function parseHeaders($rawHeaders)
     {
@@ -187,7 +183,7 @@ class Proxy
         }
         return $headers;
     }
-
+    
     private function prepareRequestHeaders()
     {
         $headers = [];
@@ -210,14 +206,14 @@ class Proxy
         }
         return $headers;
     }
-
+    
     private function sendStatusHeader($headers)
     {
         if (isset($headers['Status'])) {
             header($headers['Status']);
         }
     }
-
+    
     private function sendHeaders($headers)
     {
         $excluded = ['transfer-encoding', 'content-length', 'connection', 'content-encoding'];
@@ -231,7 +227,7 @@ class Proxy
             header("$name: $value");
         }
     }
-
+    
     private function getHeaderValue($headers, $headerName)
     {
         foreach ($headers as $name => $value) {
@@ -241,7 +237,7 @@ class Proxy
         }
         return null;
     }
-
+    
     /**
      * Rewrite the remote document by injecting a <base> tag into the <head> and converting relative URLs.
      * For anchor (<a>) tags, wrap the absolute URL in a proxy token so that clicks are proxied.
@@ -251,14 +247,15 @@ class Proxy
     {
         libxml_use_internal_errors(true);
         $doc = new DOMDocument();
+        // Load the HTML without forcing removal of implied tags.
         if (!$doc->loadHTML($html)) {
             return $html;
         }
         libxml_clear_errors();
-
+        
         // Compute the base href from the target URL.
         $baseHref = $this->getBaseHref($this->targetUrl);
-
+        
         // Inject (or update) a <base> tag in the <head>.
         $head = $doc->getElementsByTagName('head')->item(0);
         if ($head) {
@@ -271,45 +268,33 @@ class Proxy
                 $baseTags->item(0)->setAttribute('href', $baseHref);
             }
         }
-
-        // Process all elements with a "src", "href", or "action" attribute.
+        
+        // Process all elements with a "src" or "href" attribute.
         $all = $doc->getElementsByTagName('*');
         foreach ($all as $el) {
             // Process href attributes.
             if ($el->hasAttribute('href')) {
                 $url = $el->getAttribute('href');
                 $absoluteUrl = $this->resolveUrl($this->targetUrl, $url);
-                $proxyUrl = $this->generateProxyToken($absoluteUrl);
-                error_log("Rewriting href: $url -> $proxyUrl");
-                $el->setAttribute('href', $proxyUrl);
+                if (strtolower($el->tagName) === 'a') {
+                    // For anchor tags, wrap the absolute URL in a proxy token.
+                    $el->setAttribute('href', $this->generateProxyToken($absoluteUrl));
+                } else {
+                    // For other tags, set the href to the absolute URL.
+                    $el->setAttribute('href', $absoluteUrl);
+                }
             }
             // Process src attributes.
             if ($el->hasAttribute('src')) {
                 $url = $el->getAttribute('src');
                 $absoluteUrl = $this->resolveUrl($this->targetUrl, $url);
-
-                // Skip rewriting if the URL is already absolute and points to an external resource.
-                if (parse_url($url, PHP_URL_SCHEME) !== null) {
-                    continue;
-                }
-
-                $proxyUrl = $this->generateProxyToken($absoluteUrl);
-                error_log("Rewriting src: $url -> $proxyUrl");
-                $el->setAttribute('src', $proxyUrl);
-            }
-            // Process action attributes (for forms).
-            if ($el->hasAttribute('action')) {
-                $url = $el->getAttribute('action');
-                $absoluteUrl = $this->resolveUrl($this->targetUrl, $url);
-                $proxyUrl = $this->generateProxyToken($absoluteUrl);
-                error_log("Rewriting action: $url -> $proxyUrl");
-                $el->setAttribute('action', $proxyUrl);
+                $el->setAttribute('src', $absoluteUrl);
             }
         }
-
+        
         return $doc->saveHTML();
     }
-
+    
     /**
      * Compute a base href from a given URL.
      * Returns a string like "https://www.example.com/" or "https://www.example.com/subdir/".
@@ -330,7 +315,7 @@ class Proxy
         }
         return $base;
     }
-
+    
     private function resolveUrl($base, $relative)
     {
         // If $relative is already absolute, return it.
@@ -351,7 +336,7 @@ class Proxy
         $path = preg_replace('#/(?!\.\.)[^/]+/\.\./#', '/', $path);
         return $baseScheme . '://' . $baseHost . $path;
     }
-
+    
     private function generateProxyToken($url)
     {
         // Use the same secret key as in generateToken().
