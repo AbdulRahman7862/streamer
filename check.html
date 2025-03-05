@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Proxy Website</title>
+  <style>
+    /* Basic styling */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #openBtn {
+      margin: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #contentFrame {
+      width: 100%;
+      height: 90vh;
+      border: none;
+      display: none; /* Hidden until the button is clicked */
+    }
+  </style>
+</head>
+<body>
+  <button id="openBtn">Open Website</button>
+  <iframe id="contentFrame"></iframe>
+
+  <script>
+    // Utility: get query parameter value by name
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // Retrieve the website URL from the "url" query parameter (e.g., ?url=https://www.example.com)
+    const realWebsite = getQueryParam('url');
+
+    // Define a tokenized URL for display. In this example, we use a fixed token "proxy123"
+    const tokenURL = window.location.origin + '/proxy123';
+
+    const openBtn = document.getElementById('openBtn');
+    const contentFrame = document.getElementById('contentFrame');
+
+    openBtn.addEventListener('click', function() {
+      if (realWebsite) {
+        // Change the browser's URL to the tokenized version without reloading the page
+        history.pushState(null, '', tokenURL);
+
+        // Hide the button and display the iframe
+        openBtn.style.display = 'none';
+        contentFrame.style.display = 'block';
+
+        // Load the real website inside the iframe
+        contentFrame.src = realWebsite;
+      } else {
+        alert('No website URL provided! Please add a "url" query parameter.');
+      }
+    });
+  </script>
+</body>
+</html>

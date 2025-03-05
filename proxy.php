@@ -21,6 +21,13 @@ session_start(); // Needed for $_SESSION['url_map']
 
 // Allow cross-origin requests (adjust if needed)
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Handle preflight requests for CORS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
 
 // --- Step 1. Validate incoming alias and token ---
 if (!isset($_GET['alias']) || !isset($_GET['token'])) {
@@ -99,45 +106,45 @@ class Proxy
     }
 
     public function process()
-{
-    try {
-        $method = $_SERVER['REQUEST_METHOD'];
-        $data = null;
-        if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
-            $data = file_get_contents('php://input');
-        }
-
-        // Fetch remote content (headers and body).
-        list($rawHeaders, $body) = $this->fetchRemote($method, $data);
-        $headers = $this->parseHeaders($rawHeaders);
-
-        // Send the status and response headers to the client.
-        $this->sendStatusHeader($headers);
-        $this->sendHeaders($headers);
-
-        // Check if the response is an image.
-        $contentType = $this->getHeaderValue($headers, 'Content-Type');
-        if ($contentType && stripos($contentType, 'image/') !== false) {
-            // Serve the image directly.
-            echo $body;
-            exit;
-        }
-
-        // Only rewrite HTML responses.
-        if ($contentType && stripos($contentType, 'text/html') !== false) {
-            $rewritten = $this->rewriteDocument($body);
-            if (trim($rewritten) !== '') {
-                $body = $rewritten;
+    {
+        try {
+            $method = $_SERVER['REQUEST_METHOD'];
+            $data = null;
+            if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+                $data = file_get_contents('php://input');
             }
-        }
 
-        echo $body;
-    } catch (Exception $ex) {
-        error_log("Proxy Error: " . $ex->getMessage());
-        header("HTTP/1.1 500 Internal Server Error");
-        exit("An error occurred while processing your request: " . $ex->getMessage());
+            // Fetch remote content (headers and body).
+            list($rawHeaders, $body) = $this->fetchRemote($method, $data);
+            $headers = $this->parseHeaders($rawHeaders);
+
+            // Send the status and response headers to the client.
+            $this->sendStatusHeader($headers);
+            $this->sendHeaders($headers);
+
+            // Check if the response is an image.
+            $contentType = $this->getHeaderValue($headers, 'Content-Type');
+            if ($contentType && stripos($contentType, 'image/') !== false) {
+                // Serve the image directly.
+                echo $body;
+                exit;
+            }
+
+            // Only rewrite HTML responses.
+            if ($contentType && stripos($contentType, 'text/html') !== false) {
+                $rewritten = $this->rewriteDocument($body);
+                if (trim($rewritten) !== '') {
+                    $body = $rewritten;
+                }
+            }
+
+            echo $body;
+        } catch (Exception $ex) {
+            error_log("Proxy Error: " . $ex->getMessage());
+            header("HTTP/1.1 500 Internal Server Error");
+            exit("An error occurred while processing your request: " . $ex->getMessage());
+        }
     }
-}
 
     // Fetch the remote response and split headers from body.
     private function fetchRemote($method, $data = null)
@@ -420,4 +427,4 @@ try {
     header("HTTP/1.1 400 Bad Request");
     exit("Error: " . htmlspecialchars($e->getMessage()));
 }
-?>
+?>  
