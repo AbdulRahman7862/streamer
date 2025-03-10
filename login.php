@@ -6,60 +6,83 @@ if (isset($_SESSION['login'])) {
     exit;
 }
 
-// Hardcoded test license keys
-$test_keys = [
-    'TEST-KEY-1234',
-    'FAKE-KEY-5678'
-];
+// Database Connection
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=movie_db;charset=utf8", "phpuser", "TyTy123!!");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
+$test_keys = ['TEST-KEY-1234', 'FAKE-KEY-1238'];
 
 if (isset($_POST['license_key'])) {
     $license_key = trim($_POST['license_key']);
-    
-    // Check if the license key is a hardcoded test key
-    if (in_array($license_key, $test_keys)) {
-        $_SESSION['login'] = true;
-        header("Location: index.php");
-        exit;
+    $user_ip = $_SERVER['REMOTE_ADDR']; 
+
+    if ($user_ip === '::1') {
+        $user_ip = '127.0.0.1'; // Convert IPv6 loopback to IPv4
     }
 
-    $product_id = 'isUlaPNpPmhNM8NiAFHVVA=='; 
+    $is_test_key = in_array($license_key, $test_keys);
 
-    $postData = http_build_query([
-        'product_id' => $product_id,
-        'license_key' => $license_key,
-        'increment_uses_count' => 'false'
-    ]);
+    if (!$is_test_key) {
+        $product_id = 'isUlaPNpPmhNM8NiAFHVVA==';
 
-    $ch = curl_init('https://api.gumroad.com/v2/licenses/verify');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        $postData = http_build_query([
+            'product_id' => $product_id,
+            'license_key' => $license_key,
+        ]);
 
-    $result = curl_exec($ch);
-    if (curl_errno($ch)) {
-        error_log('cURL error: ' . curl_error($ch)); // Log errors instead of displaying them
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => 'https://api.gumroad.com/v2/licenses/verify',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $postData
+        ]);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            error_log('cURL error: ' . curl_error($ch));
+            curl_close($ch);
+            exit('An error occurred.');
+        }
         curl_close($ch);
-        exit;
-    }
-    curl_close($ch);
 
-    $response = json_decode($result, true);
+        $response = json_decode($result, true);
 
-    if (isset($response['success']) && $response['success'] === true) {
-        $purchase = $response['purchase'];
-        if (empty($purchase['subscription_ended_at']) && empty($purchase['subscription_cancelled_at']) && empty($purchase['subscription_failed_at'])) {
-            $_SESSION['login'] = true;
-            header("Location: index.php");
-            exit;
-        } else {
-            header("Location: subscription_page.php"); // Redirect to subscription page if subscription is not active
+        if (!($response['success'] ?? false) || !empty($response['subscription_cancelled_at']) || !empty($response['subscription_failed_at'])) {
+            header("Location: https://cozycouchpotato.gumroad.com/l/streamwithus");
             exit;
         }
-    } else {
-        echo "License verification failed. Please check your license key and try again.";
     }
+
+    // Check if the license key exists in the database
+    $stmt = $pdo->prepare("SELECT ip_address FROM license_logins WHERE license_key = ?");
+    $stmt->execute([$license_key]);
+    $stored_ip = $stmt->fetchColumn();
+
+    if ($stored_ip) {
+        if ($stored_ip !== $user_ip) {
+            exit('License key already in use from a different IP address.');
+        }
+
+        $updateStmt = $pdo->prepare("UPDATE license_logins SET last_login = NOW() WHERE license_key = ?");
+        $updateStmt->execute([$license_key]);
+    } else {
+        $insertStmt = $pdo->prepare("INSERT INTO license_logins (license_key, ip_address) VALUES (?, ?)");
+        $insertStmt->execute([$license_key, $user_ip]);
+    }
+
+    $_SESSION['login'] = true;
+    header("Location: index.php");
+    exit;
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
