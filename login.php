@@ -17,7 +17,7 @@ try {
 $test_keys = ['TEST-KEY-1234', 'FAKE-KEY-1238'];
 
 if (isset($_POST['license_key'])) {
-    $license_key = trim($_POST['license_key']);
+    $license_key = trim($_POST['license_key']); 
     $user_ip = $_SERVER['REMOTE_ADDR']; 
 
     if ($user_ip === '::1') {

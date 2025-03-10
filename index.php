@@ -70,7 +70,7 @@ function generateSignedUrl($url) {
 
 <script>
         function openInElectron(url) {
-            fetch('http://localhost:5000/open', {
+            fetch('http://138.197.163.53:5000/open', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: url })
