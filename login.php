@@ -8,7 +8,7 @@ if (isset($_SESSION['login'])) {
 
 // Database Connection
 try {
-    $pdo = new PDO("mysql:host=localhost;dbname=movie_db;charset=utf8", "phpuser", "TyTy123!!");
+    $pdo = new PDO("mysql:host=localhost;dbname=movie_db;charset=utf8", "root", "TyTy123!!");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
