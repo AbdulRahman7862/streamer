@@ -1,0 +1,23 @@
+{
+    "name": "Couch Potato",
+    "short_name": "CouchPotato",
+    "description": "Watch and stream movies with ease.",
+    "start_url": "/index.php",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#dc2626",
+    "icons": [
+      {
+        "src": "/images/logo_1.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/logo_1.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  

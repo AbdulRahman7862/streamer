@@ -24,6 +24,10 @@
   <!-- Favicon -->
   <link rel="icon" href="images/eargy1723286691.png" type="image/png">
   <link rel="shortcut icon" href="images/eargy1723286691.png" type="image/png">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#dc2626">
+
+
 
   <link rel="stylesheet" href="css/Newyears.CSS">
   

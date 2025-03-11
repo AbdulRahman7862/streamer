@@ -86,235 +86,316 @@ if (isset($_POST['license_key'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>Login Form</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
+    <meta charset="UTF-8" />
+    <title>Login Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#dc2626">
+
+    <style>
     /* Global Styles & Reset */
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    html, body {
-      height: 100%;
-      font-family: "poppins", sans-serif;
+
+    html,
+    body {
+        height: 100%;
+        font-family: "poppins", sans-serif;
     }
+
     .container {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
+
     /* Mobile Layout: Left & Right with specific heights */
-    .left-side, .right-side {
-      width: 100%;
-    }
-    .left-side {
-      height: 45vh;
-    }
+    .left-side,
     .right-side {
-      height: 55vh;
+        width: 100%;
     }
+
+    .left-side {
+        height: 45vh;
+    }
+
+    .right-side {
+        height: 55vh;
+    }
+
     /* For screens wider than 768px, display side-by-side */
     @media (min-width: 768px) {
-      .container {
-        flex-direction: row;
-      }
-      .left-side, .right-side {
-        width: 50%;
-        height: auto; /* Let content decide height on desktop */
-      }
+        .container {
+            flex-direction: row;
+        }
+
+        .left-side,
+        .right-side {
+            width: 50%;
+            height: auto;
+            /* Let content decide height on desktop */
+        }
     }
+
     /* Left Side Styles */
     .left-side {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
+
     .background-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("https://images.unsplash.com/photo-1615986201152-7686a4867f30?q=80&w=3125&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
-        center/cover no-repeat;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("https://images.unsplash.com/photo-1615986201152-7686a4867f30?q=80&w=3125&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") center/cover no-repeat;
     }
+
     .red-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(220, 38, 38, 0.8); /* red color with 80% opacity */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(220, 38, 38, 0.8);
+        /* red color with 80% opacity */
     }
+
     .left-content {
-      position: relative;
-      z-index: 1;
-      padding: 20px;
-      max-width: 320px;
-      text-align: center;
-      color: #fff;
+        position: relative;
+        z-index: 1;
+        padding: 20px;
+        max-width: 320px;
+        text-align: center;
+        color: #fff;
     }
+
     .left-content h1 {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      opacity: 0;
-      animation: fadeInUp 1s ease forwards;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        opacity: 0;
+        animation: fadeInUp 1s ease forwards;
     }
+
     .left-content p {
-      font-size: 1.125rem;
-      margin-bottom: 10px;
-      opacity: 0;
-      animation: fadeInUp 1s ease forwards;
-      animation-delay: 0.5s;
+        font-size: 1.125rem;
+        margin-bottom: 10px;
+        opacity: 0;
+        animation: fadeInUp 1s ease forwards;
+        animation-delay: 0.5s;
     }
+
     /* Right Side Styles */
     .right-side {
-      background-color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+        background-color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
     }
+
     .form-container {
-      width: 100%;
-      max-width: 400px;
-      opacity: 0;
-      animation: fadeInUp 1s ease forwards;
-      animation-delay: 0.2s ease;
+        width: 100%;
+        max-width: 400px;
+        opacity: 0;
+        animation: fadeInUp 1s ease forwards;
+        animation-delay: 0.2s ease;
     }
+
     .form-container h2 {
-      font-size: 1.875rem;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 20px;
+        font-size: 1.875rem;
+        font-weight: bold;
+        color: #fff;
+        margin-bottom: 20px;
     }
+
     .form-group {
-      margin-bottom: 16px;
+        margin-bottom: 16px;
     }
+
     .form-group label {
-      display: block;
-      margin-bottom: 4px;
-      color: #ccc;
+        display: block;
+        margin-bottom: 4px;
+        color: #ccc;
     }
+
     .password-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
+        position: relative;
+        display: flex;
+        align-items: center;
     }
+
     .form-group input {
-      width: 100%;
-      padding: 16px;
-      font-size: 1.125rem;
-      border: 1px solid #444;
-      border-radius: 4px;
-      background-color: #333;
-      color: #fff;
+        width: 100%;
+        padding: 16px;
+        font-size: 1.125rem;
+        border: 1px solid #444;
+        border-radius: 4px;
+        background-color: #333;
+        color: #fff;
     }
+
     .form-group input:focus {
-      outline: none;
-      border-color: #dc2626;
-      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
+        outline: none;
+        border-color: #dc2626;
+        box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
     }
+
     .toggle-btn {
-      position: absolute;
-      right: 8px;
-      background: none;
-      border: none;
-      color: #ccc;
-      font-size: 0.9rem;
-      cursor: pointer;
+        position: absolute;
+        right: 8px;
+        background: none;
+        border: none;
+        color: #ccc;
+        font-size: 0.9rem;
+        cursor: pointer;
     }
+
     .btn-submit {
-      width: 100%;
-      padding: 16px;
-      background-color: #dc2626;
-      color: #fff;
-      font-weight: 600;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 16px;
-      font-size: 1.125rem;
+        width: 100%;
+        padding: 16px;
+        background-color: #dc2626;
+        color: #fff;
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 16px;
+        font-size: 1.125rem;
     }
+
     .btn-submit:hover {
-      background-color: #b91c1c;
+        background-color: #b91c1c;
     }
+
     .register-link {
-      margin-top: 16px;
-      text-align: center;
-      color: #aaa;
+        margin-top: 16px;
+        text-align: center;
+        color: #aaa;
     }
+
     .register-link a {
-      color: #dc2626;
-      text-decoration: none;
+        color: #dc2626;
+        text-decoration: none;
     }
+
     .register-link a:hover {
-      text-decoration: underline;
+        text-decoration: underline;
     }
+
     /* Animation Keyframes */
     @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-  </style>
+    </style>
+
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+                console.log('Service Worker registered:', registration);
+            })
+            .catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+    }
+    </script>
 </head>
+
 <body>
-  <div class="container">
-    <!-- Left Side: Image with Red Overlay -->
-    <div class="left-side">
-      <div class="background-image"></div>
-      <div class="red-overlay"></div>
-      <div class="left-content">
-        <h1>Welcome Back</h1>
-        <p>Enjoy Your Favourite Movies</p>
-      </div>
-    </div>
-    
-    <!-- Right Side: Login Form -->
-    <div class="right-side">
-      <div class="form-container">
-        <h2>Login</h2>
-        <form action="login.php" method="post">
-          <div class="form-group">
-            <label for="password">Enter your Gumroad License Key:</label>
-            <div class="password-wrapper">
-              <input
-                id="password"
-                type="password"
-                name="license_key"
-                placeholder="••••••••"
-                required
-              />
-              <button type="button" class="toggle-btn" id="togglePassword">Show</button>
+    <div class="container">
+        <!-- Left Side: Image with Red Overlay -->
+        <div class="left-side">
+            <div class="background-image"></div>
+            <div class="red-overlay"></div>
+            <div class="left-content">
+                <h1>Welcome Back</h1>
+                <p>Enjoy Your Favourite Movies</p>
             </div>
-          </div>
-          <button type="submit" class="btn-submit">Login</button>
-        </form>
-      </div>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="right-side">
+            <div class="form-container">
+                <h2>Login</h2>
+                <form action="login.php" method="post">
+                    <div class="form-group">
+                        <label for="password">Enter your Gumroad License Key:</label>
+                        <div class="password-wrapper">
+                            <input id="password" type="password" name="license_key" placeholder="••••••••" required />
+                            <button type="button" class="toggle-btn" id="togglePassword">Show</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-  <script>
+    <script>
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
-    
+
     togglePassword.addEventListener('click', function() {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      this.textContent = type === 'password' ? 'Show' : 'Hide';
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.textContent = type === 'password' ? 'Show' : 'Hide';
     });
-  </script>
+
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+    }
+
+    let deferredPrompt;
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+
+        let installButton = document.createElement("button");
+        installButton.innerText = "Install App";
+        installButton.classList.add("install-btn");
+        document.body.appendChild(installButton);
+
+        installButton.addEventListener("click", () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === "accepted") {
+                    console.log("User accepted the install prompt");
+                } else {
+                    console.log("User dismissed the install prompt");
+                }
+                deferredPrompt = null;
+                installButton.remove();
+            });
+        });
+    });
+    </script>
 </body>
+
 </html>
