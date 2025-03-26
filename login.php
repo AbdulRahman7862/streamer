@@ -450,8 +450,9 @@ if (isset($_POST['license_key'])) {
                     title: 'Install on Android Chrome',
                     steps: [
                         '1. Tap the three dots menu (⋮) in the top-right corner',
-                        '2. Tap "Add to Home screen"',
-                        '3. Tap "Add" to confirm'
+                        '2. Look for "Install app" or "Add to Home screen"',
+                        '3. Tap "Install" in the popup that appears',
+                        '4. Wait for the installation to complete'
                     ]
                 };
             } else if (ua.includes('Firefox')) {
@@ -459,8 +460,9 @@ if (isset($_POST['license_key'])) {
                     title: 'Install on Android Firefox',
                     steps: [
                         '1. Tap the menu button (☰) in the top-right corner',
-                        '2. Tap "Add to Home screen"',
-                        '3. Tap "Add" to confirm'
+                        '2. Look for "Install" or "Add to Home screen"',
+                        '3. Tap "Install" in the popup that appears',
+                        '4. Wait for the installation to complete'
                     ]
                 };
             } else if (ua.includes('SamsungBrowser')) {
@@ -468,8 +470,9 @@ if (isset($_POST['license_key'])) {
                     title: 'Install on Samsung Browser',
                     steps: [
                         '1. Tap the menu button (⋮) in the top-right corner',
-                        '2. Tap "Add to Home screen"',
-                        '3. Tap "Add" to confirm'
+                        '2. Look for "Add to Home screen"',
+                        '3. Tap "Add" in the popup that appears',
+                        '4. Wait for the installation to complete'
                     ]
                 };
             }
