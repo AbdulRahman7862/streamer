@@ -306,6 +306,87 @@ if (isset($_POST['license_key'])) {
             transform: translateY(0);
         }
     }
+
+    /* PWA Install Modal Styles */
+    .pwa-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pwa-modal-content {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 90%;
+        width: 400px;
+        text-align: center;
+        position: relative;
+        animation: modalSlideIn 0.3s ease-out;
+    }
+
+    .pwa-modal h2 {
+        color: #dc2626;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .pwa-modal p {
+        color: #333;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+
+    .pwa-modal-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .pwa-modal-btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .pwa-install-btn {
+        background-color: #dc2626;
+        color: #fff;
+    }
+
+    .pwa-install-btn:hover {
+        background-color: #b91c1c;
+    }
+
+    .pwa-close-btn {
+        background-color: #f3f4f6;
+        color: #333;
+    }
+
+    .pwa-close-btn:hover {
+        background-color: #e5e7eb;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
     </style>
 
     <script>
@@ -372,28 +453,57 @@ if (isset($_POST['license_key'])) {
     }
 
     let deferredPrompt;
+    const pwaModal = document.createElement('div');
+    pwaModal.className = 'pwa-modal';
+    pwaModal.innerHTML = `
+        <div class="pwa-modal-content">
+            <h2>Install Couch Potato App</h2>
+            <p>Install our app for a better experience! Get quick access, offline support, and a native app-like experience.</p>
+            <div class="pwa-modal-buttons">
+                <button class="pwa-modal-btn pwa-install-btn">Install Now</button>
+                <button class="pwa-modal-btn pwa-close-btn">Maybe Later</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(pwaModal);
 
-    window.addEventListener("beforeinstallprompt", (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
+    // Show modal when page loads
+    window.addEventListener('load', () => {
+        // Check if the app is already installed
+        if (!window.matchMedia('(display-mode: standalone)').matches) {
+            setTimeout(() => {
+                pwaModal.style.display = 'flex';
+            }, 1000);
+        }
+    });
 
-        let installButton = document.createElement("button");
-        installButton.innerText = "Install App";
-        installButton.classList.add("install-btn");
-        document.body.appendChild(installButton);
+    // Handle install button click
+    pwaModal.querySelector('.pwa-install-btn').addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+        }
+        deferredPrompt = null;
+        pwaModal.style.display = 'none';
+    });
 
-        installButton.addEventListener("click", () => {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === "accepted") {
-                    console.log("User accepted the install prompt");
-                } else {
-                    console.log("User dismissed the install prompt");
-                }
-                deferredPrompt = null;
-                installButton.remove();
-            });
-        });
+    // Handle close button click
+    pwaModal.querySelector('.pwa-close-btn').addEventListener('click', () => {
+        pwaModal.style.display = 'none';
+    });
+
+    // Handle the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
+    // Handle successful installation
+    window.addEventListener('appinstalled', () => {
+        pwaModal.style.display = 'none';
+        console.log('PWA was installed');
     });
     </script>
 </body>
