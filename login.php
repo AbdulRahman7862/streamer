@@ -509,19 +509,21 @@ if (isset($_POST['license_key'])) {
                 console.log('User accepted the install prompt');
                 pwaModal.style.display = 'none';
             } else {
-                // If user declines installation, close the tab
-                window.close();
+                // If user declines installation, show message and redirect
+                alert('Please close this tab and use the installed app instead.');
+                window.location.href = '/';
             }
         } catch (error) {
             console.error('Error during installation:', error);
-            window.close();
+            alert('Please close this tab and use the installed app instead.');
+            window.location.href = '/';
         }
     });
 
     // Handle close button click
     pwaModal.querySelector('.pwa-close-btn').addEventListener('click', () => {
-        // Close the tab when user clicks close
-        window.close();
+        alert('Please close this tab and use the installed app instead.');
+        window.location.href = '/';
     });
 
     // Handle the beforeinstallprompt event
