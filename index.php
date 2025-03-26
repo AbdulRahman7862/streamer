@@ -69,36 +69,74 @@ function generateSignedUrl($url) {
 </style>
 
 <script>
-        function openInElectron(url) {
-            fetch('http://138.197.163.53:5000/open', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: url })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log("Opening in Electron:", url);
-                } else {
-                    alert("Failed to open in Electron.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
+        // Handle links within the PWA
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event listeners to all links
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Don't handle internal links (like logout)
+                    if (this.getAttribute('href').startsWith('/') || this.getAttribute('href').startsWith('#')) {
+                        return;
+                    }
+                    
+                    // Don't handle links that should open in new tab
+                    if (this.getAttribute('target') === '_blank') {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    const url = this.getAttribute('href');
+                    
+                    // Create an iframe to load the content
+                    const iframe = document.createElement('iframe');
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100vh';
+                    iframe.style.border = 'none';
+                    iframe.src = url;
+
+                    // Create a container for the iframe
+                    const container = document.createElement('div');
+                    container.style.position = 'fixed';
+                    container.style.top = '0';
+                    container.style.left = '0';
+                    container.style.width = '100%';
+                    container.style.height = '100%';
+                    container.style.backgroundColor = '#fff';
+                    container.style.zIndex = '1000';
+
+                    // Add a close button
+                    const closeButton = document.createElement('button');
+                    closeButton.innerHTML = '×';
+                    closeButton.style.position = 'fixed';
+                    closeButton.style.top = '10px';
+                    closeButton.style.right = '10px';
+                    closeButton.style.padding = '10px';
+                    closeButton.style.fontSize = '24px';
+                    closeButton.style.backgroundColor = '#dc2626';
+                    closeButton.style.color = '#fff';
+                    closeButton.style.border = 'none';
+                    closeButton.style.borderRadius = '5px';
+                    closeButton.style.cursor = 'pointer';
+                    closeButton.onclick = () => container.remove();
+
+                    // Add elements to container
+                    container.appendChild(closeButton);
+                    container.appendChild(iframe);
+                    document.body.appendChild(container);
+                });
             });
-        }
+        });
 
         if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-        .then((registration) => {
-            console.log('Service Worker registered:', registration);
-        })
-        .catch((error) => {
-            console.log('Service Worker registration failed:', error);
-        });
-}
-        
-    </script>
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered:', registration);
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+</script>
 
 <body>
     <div class="container">
