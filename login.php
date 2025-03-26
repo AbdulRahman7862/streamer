@@ -397,10 +397,129 @@ if (isset($_POST['license_key'])) {
     </style>
 
     <script>
+    let deferredPrompt;
+    let isInstallable = false;
+
+    // Check if the app is already installed
+    function isPWAInstalled() {
+        return window.matchMedia('(display-mode: standalone)').matches || 
+               window.navigator.standalone || 
+               document.referrer.includes('android-app://');
+    }
+
+    // Check if the browser supports PWA installation
+    function isInstallableBrowser() {
+        const ua = navigator.userAgent;
+        return (
+            ua.includes('Chrome') || 
+            ua.includes('Edge') || 
+            ua.includes('Firefox') || 
+            ua.includes('Safari')
+        );
+    }
+
+    const pwaModal = document.createElement('div');
+    pwaModal.className = 'pwa-modal';
+    pwaModal.innerHTML = `
+        <div class="pwa-modal-content">
+            <h2>Install Couch Potato App</h2>
+            <p>To use this website, you must install our app. This will give you the best experience with offline support and quick access.</p>
+            <div class="pwa-modal-buttons">
+                <button class="pwa-modal-btn pwa-install-btn">Install App</button>
+                <button class="pwa-modal-btn pwa-close-btn">Close</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(pwaModal);
+
+    // Show modal when page loads
+    window.addEventListener('load', () => {
+        if (!isPWAInstalled() && isInstallableBrowser()) {
+            setTimeout(() => {
+                pwaModal.style.display = 'flex';
+            }, 1000);
+        }
+    });
+
+    // Handle install button click
+    pwaModal.querySelector('.pwa-install-btn').addEventListener('click', async () => {
+        if (!deferredPrompt) {
+            // If deferredPrompt is not available, show browser-specific instructions
+            const ua = navigator.userAgent;
+            if (ua.includes('Chrome') || ua.includes('Edge')) {
+                alert('To install the app:\n1. Click the three dots menu (⋮) in the top-right corner\n2. Look for "Install Couch Potato" or "Add to Home Screen"\n3. Click "Install" in the popup that appears');
+            } else if (ua.includes('Firefox')) {
+                alert('To install the app:\n1. Click the menu button (☰) in the top-right corner\n2. Look for "Install Couch Potato" or "Add to Home Screen"\n3. Click "Install" in the popup that appears');
+            } else if (ua.includes('Safari')) {
+                alert('To install the app:\n1. Click the share button (□↑) in the top bar\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm');
+            } else {
+                alert('Please use Chrome, Edge, Firefox, or Safari to install the app');
+            }
+            return;
+        }
+        
+        try {
+            // Show the install prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+                pwaModal.style.display = 'none';
+            } else {
+                // If user declines installation, show message and redirect
+                alert('Please close this tab and use the installed app instead.');
+                window.location.href = '/';
+            }
+        } catch (error) {
+            console.error('Error during installation:', error);
+            alert('Please close this tab and use the installed app instead.');
+            window.location.href = '/';
+        }
+    });
+
+    // Handle close button click
+    pwaModal.querySelector('.pwa-close-btn').addEventListener('click', () => {
+        alert('Please close this tab and use the installed app instead.');
+        window.location.href = '/';
+    });
+
+    // Handle the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        deferredPrompt = e;
+        isInstallable = true;
+        console.log('Install prompt is ready');
+    });
+
+    // Handle successful installation
+    window.addEventListener('appinstalled', () => {
+        pwaModal.style.display = 'none';
+        console.log('PWA was installed');
+        // Redirect to the installed app
+        window.location.href = '/';
+    });
+
+    // Prevent closing the modal by clicking outside
+    pwaModal.addEventListener('click', (e) => {
+        if (e.target === pwaModal) {
+            e.preventDefault();
+        }
+    });
+
+    // Prevent default browser back button
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+        window.history.pushState(null, null, window.location.href);
+    };
+
+    // Register service worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
             .then((registration) => {
-                console.log('Service Worker registered:', registration);
+                console.log('Service Worker registered with scope:', registration.scope);
             })
             .catch((error) => {
                 console.log('Service Worker registration failed:', error);
@@ -447,114 +566,6 @@ if (isset($_POST['license_key'])) {
         passwordInput.setAttribute('type', type);
         this.textContent = type === 'password' ? 'Show' : 'Hide';
     });
-
-
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-                console.log('Service Worker registered with scope:', registration.scope);
-            })
-            .catch((error) => {
-                console.log('Service Worker registration failed:', error);
-            });
-    }
-
-    let deferredPrompt;
-    const pwaModal = document.createElement('div');
-    pwaModal.className = 'pwa-modal';
-    pwaModal.innerHTML = `
-        <div class="pwa-modal-content">
-            <h2>Install Couch Potato App</h2>
-            <p>To use this website, you must install our app. This will give you the best experience with offline support and quick access.</p>
-            <div class="pwa-modal-buttons">
-                <button class="pwa-modal-btn pwa-install-btn">Install App</button>
-                <button class="pwa-modal-btn pwa-close-btn">Close</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(pwaModal);
-
-    // Show modal when page loads
-    window.addEventListener('load', () => {
-        // Check if the app is already installed
-        if (!window.matchMedia('(display-mode: standalone)').matches) {
-            setTimeout(() => {
-                pwaModal.style.display = 'flex';
-            }, 1000);
-        }
-    });
-
-    // Handle install button click
-    pwaModal.querySelector('.pwa-install-btn').addEventListener('click', async () => {
-        if (!deferredPrompt) {
-            // If deferredPrompt is not available, try to show installation instructions
-            if (navigator.userAgent.includes('Chrome') || navigator.userAgent.includes('Edge')) {
-                alert('Please click the menu button (three dots) in your browser and select "Install Couch Potato"');
-            } else if (navigator.userAgent.includes('Firefox')) {
-                alert('Please click the menu button (three lines) in your browser and select "Install Couch Potato"');
-            } else if (navigator.userAgent.includes('Safari')) {
-                alert('Please click the share button in your browser and select "Add to Home Screen"');
-            } else {
-                alert('Please use Chrome, Edge, Firefox, or Safari to install the app');
-            }
-            return;
-        }
-        
-        try {
-            // Show the install prompt
-            deferredPrompt.prompt();
-            // Wait for the user to respond to the prompt
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('User accepted the install prompt');
-                pwaModal.style.display = 'none';
-            } else {
-                // If user declines installation, show message and redirect
-                alert('Please close this tab and use the installed app instead.');
-                window.location.href = '/';
-            }
-        } catch (error) {
-            console.error('Error during installation:', error);
-            alert('Please close this tab and use the installed app instead.');
-            window.location.href = '/';
-        }
-    });
-
-    // Handle close button click
-    pwaModal.querySelector('.pwa-close-btn').addEventListener('click', () => {
-        alert('Please close this tab and use the installed app instead.');
-        window.location.href = '/';
-    });
-
-    // Handle the beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault();
-        // Stash the event so it can be triggered later
-        deferredPrompt = e;
-        console.log('Install prompt is ready');
-    });
-
-    // Handle successful installation
-    window.addEventListener('appinstalled', () => {
-        pwaModal.style.display = 'none';
-        console.log('PWA was installed');
-        // Redirect to the installed app
-        window.location.href = '/';
-    });
-
-    // Prevent closing the modal by clicking outside
-    pwaModal.addEventListener('click', (e) => {
-        if (e.target === pwaModal) {
-            e.preventDefault();
-        }
-    });
-
-    // Prevent default browser back button
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function () {
-        window.history.pushState(null, null, window.location.href);
-    };
     </script>
 </body>
 
