@@ -416,7 +416,10 @@ if (isset($_POST['license_key'])) {
     function isPWAInstalled() {
         return window.matchMedia('(display-mode: standalone)').matches || 
                window.navigator.standalone || 
-               document.referrer.includes('android-app://');
+               document.referrer.includes('android-app://') ||
+               window.location.protocol === 'app:' ||
+               window.location.hostname === 'localhost' ||
+               window.location.hostname === '127.0.0.1';
     }
 
     // Check if the browser supports PWA installation
@@ -480,9 +483,10 @@ if (isset($_POST['license_key'])) {
             return {
                 title: 'Install on Chrome',
                 steps: [
-                    '1. Click the three dots menu (⋮) in the top-right corner',
-                    '2. Look for "Install Couch Potato" or "Add to Home Screen"',
-                    '3. Click "Install" in the popup that appears'
+                    '1. Click the install icon (⊕) in the address bar',
+                    '2. If you don\'t see the install icon, click the three dots menu (⋮) in the top-right corner',
+                    '3. Look for "Install Couch Potato"',
+                    '4. Click "Install" in the popup that appears'
                 ]
             };
         } else if (ua.includes('Firefox')) {
@@ -630,6 +634,15 @@ if (isset($_POST['license_key'])) {
 
     // Initialize PWA functionality when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
+        // Check if PWA is already installed
+        if (isPWAInstalled()) {
+            // If we're not already in the PWA, redirect to the PWA URL
+            if (!window.matchMedia('(display-mode: standalone)').matches) {
+                window.location.href = '/';
+            }
+            return;
+        }
+
         // Register service worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
@@ -642,7 +655,7 @@ if (isset($_POST['license_key'])) {
         }
 
         // Create and show modal if needed
-        if (!isPWAInstalled()) {
+        if (!isPWAInstalled() && isInstallableBrowser()) {
             setTimeout(() => {
                 createPWAModal();
                 pwaModal.style.display = 'flex';
