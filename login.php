@@ -548,77 +548,40 @@ if (isset($_POST['license_key'])) {
 
         // Handle install button click
         pwaModal.querySelector('.pwa-install-btn').addEventListener('click', async () => {
-            if (!deferredPrompt) {
-                // If deferredPrompt is not available, try to trigger installation directly
-                const ua = navigator.userAgent;
-                if (ua.includes('Chrome') || ua.includes('Edge')) {
-                    // For Chrome/Edge, try to trigger the native install prompt
-                    if ('getInstalledRelatedApps' in navigator) {
-                        try {
-                            const relatedApps = await navigator.getInstalledRelatedApps();
-                            if (!relatedApps.length) {
-                                // If app is not installed, try to trigger installation
-                                if ('standalone' in navigator) {
-                                    navigator.standalone.request();
-                                } else {
-                                    // Try to trigger the native install prompt
-                                    const manifestLink = document.querySelector('link[rel="manifest"]');
-                                    if (manifestLink) {
-                                        const manifestUrl = manifestLink.href;
-                                        // Create a temporary link to trigger installation
-                                        const link = document.createElement('a');
-                                        link.href = manifestUrl;
-                                        link.rel = 'manifest';
-                                        document.head.appendChild(link);
-                                        link.click();
-                                        document.head.removeChild(link);
-                                    }
-                                }
-                                return;
-                            }
-                        } catch (error) {
-                            console.error('Error checking installed apps:', error);
-                        }
-                    }
-                } else if (ua.includes('Firefox')) {
-                    // For Firefox, try to trigger the native install prompt
-                    if ('mozApps' in navigator) {
-                        try {
-                            const request = navigator.mozApps.getSelf();
-                            request.onsuccess = function() {
-                                if (!request.result) {
-                                    // Try to trigger installation
-                                    if ('standalone' in navigator) {
-                                        navigator.standalone.request();
-                                    }
-                                }
-                            };
-                        } catch (error) {
-                            console.error('Error checking Firefox app:', error);
-                        }
-                    }
-                }
-                return;
-            }
+            const ua = navigator.userAgent;
+            const instructions = getInstallInstructions();
             
-            try {
-                // Show the install prompt
-                deferredPrompt.prompt();
-                // Wait for the user to respond to the prompt
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                    pwaModal.style.display = 'none';
-                } else {
-                    // If user declines installation, show message and redirect
-                    alert('Please close this tab and use the installed app instead.');
-                    window.location.href = '/';
-                }
-            } catch (error) {
-                console.error('Error during installation:', error);
+            // Show the instructions in a more prominent way
+            const instructionsDiv = pwaModal.querySelector('.install-instructions');
+            instructionsDiv.style.display = 'block';
+            instructionsDiv.style.marginTop = '20px';
+            instructionsDiv.style.padding = '15px';
+            instructionsDiv.style.backgroundColor = '#f8f9fa';
+            instructionsDiv.style.borderRadius = '5px';
+            
+            // Hide the install button since we're showing instructions
+            pwaModal.querySelector('.pwa-install-btn').style.display = 'none';
+            
+            // Update the modal content to focus on instructions
+            pwaModal.querySelector('.pwa-modal-content').innerHTML = `
+                <h2>Install Couch Potato App</h2>
+                <p>Follow these steps to install the app:</p>
+                <div class="install-instructions">
+                    <h3>${instructions.title}</h3>
+                    <ul>
+                        ${instructions.steps.map(step => `<li>${step}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="pwa-modal-buttons">
+                    <button class="pwa-modal-btn pwa-close-btn">Close</button>
+                </div>
+            `;
+
+            // Reattach close button event listener
+            pwaModal.querySelector('.pwa-close-btn').addEventListener('click', () => {
                 alert('Please close this tab and use the installed app instead.');
                 window.location.href = '/';
-            }
+            });
         });
 
         // Handle close button click
