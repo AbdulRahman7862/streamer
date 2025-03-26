@@ -14,7 +14,18 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-$test_keys = ['TEST-KEY-1234', 'FAKE-KEY-1238'];
+$test_keys = [
+    'TEST-KEY-1234', 'FAKE-KEY-1238',
+    'TEST-KEY-5678', 'FAKE-KEY-9012',
+    'TEST-KEY-3456', 'FAKE-KEY-7890',
+    'TEST-KEY-2345', 'FAKE-KEY-6789',
+    'TEST-KEY-4567', 'FAKE-KEY-8901',
+    'TEST-KEY-6789', 'FAKE-KEY-0123',
+    'TEST-KEY-8901', 'FAKE-KEY-2345',
+    'TEST-KEY-0123', 'FAKE-KEY-4567',
+    'TEST-KEY-2345', 'FAKE-KEY-6789',
+    'TEST-KEY-4567', 'FAKE-KEY-8901'
+];
 
 if (isset($_POST['license_key'])) {
     $license_key = trim($_POST['license_key']); 
@@ -408,21 +419,102 @@ if (isset($_POST['license_key'])) {
                document.referrer.includes('android-app://');
     }
 
-    // Check if the browser supports PWA installation
-    function isInstallableBrowser() {
+    // Get browser-specific installation instructions
+    function getInstallInstructions() {
         const ua = navigator.userAgent;
-        return (
-            ua.includes('Chrome') || 
-            ua.includes('Edge') || 
-            ua.includes('Firefox') || 
-            ua.includes('Safari')
-        );
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        
+        if (ua.includes('iPhone') || ua.includes('iPad') || ua.includes('iPod')) {
+            return {
+                title: 'Install on iOS',
+                steps: [
+                    '1. Tap the share button (□↑) in the bottom bar',
+                    '2. Scroll down and tap "Add to Home Screen"',
+                    '3. Tap "Add" to confirm'
+                ]
+            };
+        } else if (ua.includes('Android')) {
+            if (ua.includes('Chrome')) {
+                return {
+                    title: 'Install on Android Chrome',
+                    steps: [
+                        '1. Tap the three dots menu (⋮) in the top-right corner',
+                        '2. Tap "Add to Home screen"',
+                        '3. Tap "Add" to confirm'
+                    ]
+                };
+            } else if (ua.includes('Firefox')) {
+                return {
+                    title: 'Install on Android Firefox',
+                    steps: [
+                        '1. Tap the menu button (☰) in the top-right corner',
+                        '2. Tap "Add to Home screen"',
+                        '3. Tap "Add" to confirm'
+                    ]
+                };
+            } else if (ua.includes('SamsungBrowser')) {
+                return {
+                    title: 'Install on Samsung Browser',
+                    steps: [
+                        '1. Tap the menu button (⋮) in the top-right corner',
+                        '2. Tap "Add to Home screen"',
+                        '3. Tap "Add" to confirm'
+                    ]
+                };
+            }
+        } else if (ua.includes('Chrome')) {
+            return {
+                title: 'Install on Chrome',
+                steps: [
+                    '1. Click the three dots menu (⋮) in the top-right corner',
+                    '2. Look for "Install Couch Potato" or "Add to Home Screen"',
+                    '3. Click "Install" in the popup that appears'
+                ]
+            };
+        } else if (ua.includes('Firefox')) {
+            return {
+                title: 'Install on Firefox',
+                steps: [
+                    '1. Click the menu button (☰) in the top-right corner',
+                    '2. Look for "Install Couch Potato" or "Add to Home Screen"',
+                    '3. Click "Install" in the popup that appears'
+                ]
+            };
+        } else if (ua.includes('Edge')) {
+            return {
+                title: 'Install on Edge',
+                steps: [
+                    '1. Click the three dots menu (⋮) in the top-right corner',
+                    '2. Look for "Install Couch Potato" or "Add to Home Screen"',
+                    '3. Click "Install" in the popup that appears'
+                ]
+            };
+        } else if (ua.includes('Safari')) {
+            return {
+                title: 'Install on Safari',
+                steps: [
+                    '1. Click the share button (□↑) in the top bar',
+                    '2. Scroll down and click "Add to Home Screen"',
+                    '3. Click "Add" to confirm'
+                ]
+            };
+        }
+
+        // Default instructions for unsupported browsers
+        return {
+            title: 'Install Couch Potato',
+            steps: [
+                'Please use Chrome, Edge, Firefox, or Safari to install the app',
+                'Mobile users: Please use Chrome, Firefox, or Safari on your device'
+            ]
+        };
     }
 
     // Create and show the PWA modal
     function createPWAModal() {
         if (pwaModal) return;
 
+        const instructions = getInstallInstructions();
         pwaModal = document.createElement('div');
         pwaModal.className = 'pwa-modal';
         pwaModal.innerHTML = `
@@ -432,6 +524,12 @@ if (isset($_POST['license_key'])) {
                 <div class="pwa-modal-buttons">
                     <button class="pwa-modal-btn pwa-install-btn">Install App</button>
                     <button class="pwa-modal-btn pwa-close-btn">Close</button>
+                </div>
+                <div class="install-instructions">
+                    <h3>${instructions.title}</h3>
+                    <ul>
+                        ${instructions.steps.map(step => `<li>${step}</li>`).join('')}
+                    </ul>
                 </div>
             </div>
         `;
@@ -488,11 +586,6 @@ if (isset($_POST['license_key'])) {
                             console.error('Error checking Firefox app:', error);
                         }
                     }
-                } else if (ua.includes('Safari')) {
-                    // For Safari, show specific instructions
-                    alert('To install the app on Safari:\n1. Tap the share button (□↑) in the top bar\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm');
-                } else {
-                    alert('Please use Chrome, Edge, Firefox, or Safari to install the app');
                 }
                 return;
             }
@@ -530,6 +623,33 @@ if (isset($_POST['license_key'])) {
             }
         });
     }
+
+    // Add styles for installation instructions
+    const style = document.createElement('style');
+    style.textContent = `
+        .install-instructions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: left;
+        }
+        .install-instructions h3 {
+            color: #dc2626;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .install-instructions ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .install-instructions li {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+    `;
+    document.head.appendChild(style);
 
     // Initialize PWA functionality when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
