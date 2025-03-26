@@ -440,14 +440,39 @@ if (isset($_POST['license_key'])) {
         // Handle install button click
         pwaModal.querySelector('.pwa-install-btn').addEventListener('click', async () => {
             if (!deferredPrompt) {
-                // If deferredPrompt is not available, show browser-specific instructions
+                // If deferredPrompt is not available, try to trigger installation directly
                 const ua = navigator.userAgent;
                 if (ua.includes('Chrome') || ua.includes('Edge')) {
-                    alert('To install the app:\n1. Click the three dots menu (⋮) in the top-right corner\n2. Look for "Install Couch Potato" or "Add to Home Screen"\n3. Click "Install" in the popup that appears');
+                    // For Chrome/Edge, try to trigger the native install prompt
+                    if ('getInstalledRelatedApps' in navigator) {
+                        try {
+                            const relatedApps = await navigator.getInstalledRelatedApps();
+                            if (!relatedApps.length) {
+                                // If app is not installed, try to trigger installation
+                                window.location.href = '/manifest.json';
+                                return;
+                            }
+                        } catch (error) {
+                            console.error('Error checking installed apps:', error);
+                        }
+                    }
                 } else if (ua.includes('Firefox')) {
-                    alert('To install the app:\n1. Click the menu button (☰) in the top-right corner\n2. Look for "Install Couch Potato" or "Add to Home Screen"\n3. Click "Install" in the popup that appears');
+                    // For Firefox, try to trigger the native install prompt
+                    if ('mozApps' in navigator) {
+                        try {
+                            const request = navigator.mozApps.getSelf();
+                            request.onsuccess = function() {
+                                if (!request.result) {
+                                    window.location.href = '/manifest.json';
+                                }
+                            };
+                        } catch (error) {
+                            console.error('Error checking Firefox app:', error);
+                        }
+                    }
                 } else if (ua.includes('Safari')) {
-                    alert('To install the app:\n1. Click the share button (□↑) in the top bar\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm');
+                    // For Safari, show specific instructions
+                    alert('To install the app on Safari:\n1. Tap the share button (□↑) in the top bar\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm');
                 } else {
                     alert('Please use Chrome, Edge, Firefox, or Safari to install the app');
                 }
