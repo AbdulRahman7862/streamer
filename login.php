@@ -487,23 +487,23 @@ if (isset($_POST['license_key'])) {
     // Handle install button click
     pwaModal.querySelector('.pwa-install-btn').addEventListener('click', async () => {
         if (!deferredPrompt) {
-            // If deferredPrompt is not available, try to trigger the native install prompt
-            if ('getInstalledRelatedApps' in navigator) {
-                try {
-                    const relatedApps = await navigator.getInstalledRelatedApps();
-                    if (relatedApps.length === 0) {
-                        // If no related apps are installed, try to show the native install prompt
-                        window.location.href = '/manifest.json';
-                    }
-                } catch (error) {
-                    console.error('Error checking installed apps:', error);
-                }
+            // If deferredPrompt is not available, try to show installation instructions
+            if (navigator.userAgent.includes('Chrome') || navigator.userAgent.includes('Edge')) {
+                alert('Please click the menu button (three dots) in your browser and select "Install Couch Potato"');
+            } else if (navigator.userAgent.includes('Firefox')) {
+                alert('Please click the menu button (three lines) in your browser and select "Install Couch Potato"');
+            } else if (navigator.userAgent.includes('Safari')) {
+                alert('Please click the share button in your browser and select "Add to Home Screen"');
+            } else {
+                alert('Please use Chrome, Edge, Firefox, or Safari to install the app');
             }
             return;
         }
         
         try {
+            // Show the install prompt
             deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 console.log('User accepted the install prompt');
@@ -528,7 +528,9 @@ if (isset($_POST['license_key'])) {
 
     // Handle the beforeinstallprompt event
     window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
         e.preventDefault();
+        // Stash the event so it can be triggered later
         deferredPrompt = e;
         console.log('Install prompt is ready');
     });
