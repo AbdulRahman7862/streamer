@@ -419,6 +419,17 @@ if (isset($_POST['license_key'])) {
                document.referrer.includes('android-app://');
     }
 
+    // Check if the browser supports PWA installation
+    function isInstallableBrowser() {
+        const ua = navigator.userAgent;
+        return (
+            ua.includes('Chrome') || 
+            ua.includes('Edge') || 
+            ua.includes('Firefox') || 
+            ua.includes('Safari')
+        );
+    }
+
     // Get browser-specific installation instructions
     function getInstallInstructions() {
         const ua = navigator.userAgent;
@@ -665,7 +676,7 @@ if (isset($_POST['license_key'])) {
         }
 
         // Create and show modal if needed
-        if (!isPWAInstalled() && isInstallableBrowser()) {
+        if (!isPWAInstalled()) {
             setTimeout(() => {
                 createPWAModal();
                 pwaModal.style.display = 'flex';
