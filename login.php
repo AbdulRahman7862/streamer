@@ -449,7 +449,22 @@ if (isset($_POST['license_key'])) {
                             const relatedApps = await navigator.getInstalledRelatedApps();
                             if (!relatedApps.length) {
                                 // If app is not installed, try to trigger installation
-                                window.location.href = '/manifest.json';
+                                if ('standalone' in navigator) {
+                                    navigator.standalone.request();
+                                } else {
+                                    // Try to trigger the native install prompt
+                                    const manifestLink = document.querySelector('link[rel="manifest"]');
+                                    if (manifestLink) {
+                                        const manifestUrl = manifestLink.href;
+                                        // Create a temporary link to trigger installation
+                                        const link = document.createElement('a');
+                                        link.href = manifestUrl;
+                                        link.rel = 'manifest';
+                                        document.head.appendChild(link);
+                                        link.click();
+                                        document.head.removeChild(link);
+                                    }
+                                }
                                 return;
                             }
                         } catch (error) {
@@ -463,7 +478,10 @@ if (isset($_POST['license_key'])) {
                             const request = navigator.mozApps.getSelf();
                             request.onsuccess = function() {
                                 if (!request.result) {
-                                    window.location.href = '/manifest.json';
+                                    // Try to trigger installation
+                                    if ('standalone' in navigator) {
+                                        navigator.standalone.request();
+                                    }
                                 }
                             };
                         } catch (error) {
