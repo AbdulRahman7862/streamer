@@ -179,58 +179,58 @@ function generateSignedUrl($url) {
         <div class="section filter-item" data-category="movies">
             <h2 class="section-header">Movies &amp; Shows</h2>
             <div class="icon-link">
-            <a href="#" onclick="openInElectron(`https://www.vidbinge.com/`)">
-            <img src="images/FtAgO1725000848.png" alt="VidBinge Logo" class="icon">
-        </a>
+                <a href="https://www.vidbinge.com/">
+                    <img src="images/FtAgO1725000848.png" alt="VidBinge Logo" class="icon">
+                </a>
             </div>
 
             <div class="icon-link">
-                <a href="#" onclick="openInElectron(`https://catflix.su/home`)"> 
+                <a href="https://catflix.su/home"> 
                     <img src="images/catflix-dark.svg" alt="CatFlix Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://cinemadeck.com/" target="_blank">
+                <a href="https://cinemadeck.com/">
                     <img src="images/hz2661MTQ.png" alt="CinemaDeck Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.popcornmovies.to/home" target="_blank">
+                <a href="https://www.popcornmovies.to/home">
                     <img src="images/logo-1723617006.png" alt="PopcornMovies Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://nepu.to/" target="_blank">
+                <a href="https://nepu.to/">
                     <img src="images/lTi8711Gm.png" alt="Nepu Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.rgshows.me/?p=1" target="_blank">
+                <a href="https://www.rgshows.me/?p=1">
                     <img src="images/logo.png" alt="RG Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://broflix.cc/" target="_blank">
+                <a href="https://broflix.cc/">
                     <img src="images/aQS5589hA.Png" alt="BroFlix Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://freek.to/" target="_blank">
+                <a href="https://freek.to/">
                     <img src="images/Hej3468Ng.png" alt="Freek Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.cineby.ru/" target="_blank">
+                <a href="https://www.cineby.ru/">
                     <img src="images/yM9960MRM.png" alt="Cineby Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://rivestream.live/" target="_blank">
+                <a href="https://rivestream.live/">
                     <img src="images/HdLW81723624024.png" alt="RiveStream Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://fmovies-hd.to/home/" target="_blank">
+                <a href="https://fmovies-hd.to/home/">
                     <img src="images/800px-FMovies_Logo.png" alt="Fmovies Logo" class="icon">
                 </a>
             </div>
@@ -240,28 +240,28 @@ function generateSignedUrl($url) {
             </a>
         </div> -->
             <div class="icon-link">
-                <a href="https://bflix.sh/home/" target="_blank">
+                <a href="https://bflix.sh/home/">
                     <img src="images/logo_9.png" alt="Bflix Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://faragski.com/" target="_blank">
+                <a href="https://faragski.com/">
                     <img src="images/embed-logo.png" alt="Faragski Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://watch.autoembed.cc/" target="_blank">
+                <a href="https://watch.autoembed.cc/">
                     <img src="images/KIDcO1724709727.png" alt="autoembed Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.cinebook.xyz/" target="_blank">
+                <a href="https://www.cinebook.xyz/">
                     <img src="https://www.cinebook.xyz/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-white.00d35c63.png&w=256&q=75"
                         alt="cinebook Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://hydrahd.com/" target="_blank">
+                <a href="https://hydrahd.com/">
                     <img src="images/UnF971724715842.png" alt="Hydra Logo" class="icon">
                 </a>
             </div>
@@ -271,42 +271,42 @@ function generateSignedUrl($url) {
         <div class="section filter-item" data-category="anime">
             <h2 class="section-header">Anime</h2>
             <div class="icon-link">
-                <a href="https://hianime.to/home" target="_blank">
+                <a href="https://hianime.to/home">
                     <img src="images/logo_2.png" alt="HiAnime Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://yukiwatch.su/home" target="_blank">
+                <a href="https://yukiwatch.su/home">
                     <img src="images/5SQWm1728817939.png" alt="Yuki Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://aniwatchtv.to/home" target="_blank">
+                <a href="https://aniwatchtv.to/home">
                     <img src="images/logo_3.png" alt="Aniwatch Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://animetsu.cc/" target="_blank">
+                <a href="https://animetsu.cc/">
                     <img src="images/Ku7B41723286338.png" alt="Animetsu Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://kaido.to/home" target="_blank">
+                <a href="https://kaido.to/home">
                     <img src="images/logo_4.png" alt="Kaido  Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://anicrush.to/home" target="_blank">
+                <a href="https://anicrush.to/home">
                     <img src="images/logo_10.png" alt="Anicrush Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://rivekun.rivestream.live/" target="_blank">
+                <a href="https://rivekun.rivestream.live/">
                     <img src="images/vXOCc1724998473.png" alt="RiveKun Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://kickassanime.am/anime" target="_blank">
+                <a href="https://kickassanime.am/anime">
                     <img src="images/logo_11.png" alt="Zorox Logo" class="icon">
                 </a>
             </div>
@@ -322,37 +322,37 @@ function generateSignedUrl($url) {
             <h2 class="section-header">Manga</h2>
 
             <div class="icon-link">
-                <a href="https://comick.io/home2" target="_blank">
+                <a href="https://comick.io/home2">
                     <img src="images/q0sjq1724994374.png" alt="Comick Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://mangareader.to/home" target="_blank">
+                <a href="https://mangareader.to/home">
                     <img src="images/logo_7.png" alt="MangaReader Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://mangago.me/" target="_blank">
+                <a href="https://mangago.me/">
                     <img src="images/logo-new-g.png" alt="mangago Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://mangafire.to/home" target="_blank">
+                <a href="https://mangafire.to/home">
                     <img src="images/logo_5.png" alt="mangafires Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://allmanga.to/manga?cty=ALL" target="_blank">
+                <a href="https://allmanga.to/manga?cty=ALL">
                     <img src="images/3p7jx1724994756.png" alt="AllManga Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://mangakakalot.com/" target="_blank">
+                <a href="https://mangakakalot.com/">
                     <img src="images/logo_6.png" alt="MangaKakalot Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://asuracomic.net/" target="_blank">
+                <a href="https://asuracomic.net/">
                     <img src="images/logo.webp" alt="Asuracomic Logo" class="icon">
                 </a>
             </div>
@@ -362,32 +362,32 @@ function generateSignedUrl($url) {
         <div class="section filter-item" data-category="livetv">
             <h2 class="section-header">Live-Tv</h2>
             <div class="icon-link">
-                <a href="https://thetvapp.to" target="_blank">
+                <a href="https://thetvapp.to">
                     <img src="https://thetvapp.to/img/TheTVApp.svg" alt="TheTvApp Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://tv247.us/all-channels/" target="_blank">
+                <a href="https://tv247.us/all-channels/">
                     <img src="images/logo-1.png" alt=" TV247 Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://usatvgo.live/" target="_blank">
+                <a href="https://usatvgo.live/">
                     <img src="images/oK56s1723286576.png" alt="USATVGO Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://en12.sportplus.live/" target="_blank">
+                <a href="https://en12.sportplus.live/">
                     <img src="images/logo.svg" alt="Sport+" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://the.streameast.app/v86" target="_blank">
+                <a href="https://the.streameast.app/v86">
                     <img src="images/logo_8.png" alt="StreamEast" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://v2.sportsurge.net/" target="_blank">
+                <a href="https://v2.sportsurge.net/">
                     <img src="images/j4ZZN1724656768.png" alt="sportsurge Logo" class="icon">
                 </a>
             </div>
@@ -397,42 +397,42 @@ function generateSignedUrl($url) {
         <div class="section filter-item" data-category="paid">
             <h2 class="section-header">Paid-Movies &amp; Shows</h2>
             <div class="icon-link">
-                <a href="https://www.disneyplus.com/identity/login/" target="_blank">
+                <a href="https://www.disneyplus.com/identity/login/">
                     <img src="images/dp2024_mainlogo_1c11458c.png" alt="Disney+ Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://auth.hulu.com/web/login/" target="_blank">
+                <a href="https://auth.hulu.com/web/login/">
                     <img src="images/Hulu-Logo.wine.png" alt="HULU Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.netflix.com/" target="_blank">
+                <a href="https://www.netflix.com/">
                     <img src="images/Logonetflix.png" alt="Netflix Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.max.com/" target="_blank">
+                <a href="https://www.max.com/">
                     <img src="images/max-h-w-l.svg" alt="MAX Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://tv.apple.com/" target="_blank">
+                <a href="https://tv.apple.com/">
                     <img src="images/e88b7ed1cb586cf4a763bb4eef4e07ac.png" alt="AppleTv+ Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.amazon.com/gp/video/collection/IncludedwithPrime" target="_blank">
+                <a href="https://www.amazon.com/gp/video/collection/IncludedwithPrime">
                     <img src="images/Amazon_Prime_Video_logo.svg" alt="AmazonPrime Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://www.paramountplus.com/account/signin/" target="_blank">
+                <a href="https://www.paramountplus.com/account/signin/">
                     <img src="images/pplus_logo_white.svg" alt="Paramount+ Logo" class="icon">
                 </a>
             </div>
             <div class="icon-link">
-                <a href="https://sso-v2.crunchyroll.com/login" target="_blank">
+                <a href="https://sso-v2.crunchyroll.com/login">
                     <img src="images/1024px-Crunchyroll.svg.png" alt="CrunchyRoll Logo" class="icon">
                 </a>
             </div>
