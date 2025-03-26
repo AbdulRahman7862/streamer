@@ -154,7 +154,7 @@ function generateSignedUrl($url) {
         <h1 class="head">The Best Couch Potato List!</h1>
         <a href="logout.php" class="logout-btn" id="lout">Logout</a>
 
-        <p class="head">
+        <!-- <p class="head">
             <span style="font-family: Arial, sans-serif">
                 <strong><u>
                         Please click and download
@@ -172,7 +172,7 @@ function generateSignedUrl($url) {
                         BEFORE clicking on one of the links below (Otherwise you will see ads/popups!)
                     </u></strong>
             </span>
-        </p>
+        </p> -->
 
 
         <!-- Filter Navigation -->
