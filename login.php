@@ -330,18 +330,21 @@ if (isset($_POST['license_key'])) {
         text-align: center;
         position: relative;
         animation: modalSlideIn 0.3s ease-out;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .pwa-modal h2 {
         color: #dc2626;
         margin-bottom: 1rem;
         font-size: 1.5rem;
+        font-weight: bold;
     }
 
     .pwa-modal p {
         color: #333;
         margin-bottom: 1.5rem;
         line-height: 1.5;
+        font-size: 1.1rem;
     }
 
     .pwa-modal-buttons {
@@ -357,20 +360,24 @@ if (isset($_POST['license_key'])) {
         cursor: pointer;
         font-weight: 600;
         transition: all 0.3s ease;
+        font-size: 1rem;
     }
 
     .pwa-install-btn {
         background-color: #dc2626;
         color: #fff;
+        flex: 2;
     }
 
     .pwa-install-btn:hover {
         background-color: #b91c1c;
+        transform: scale(1.05);
     }
 
     .pwa-close-btn {
         background-color: #f3f4f6;
         color: #333;
+        flex: 1;
     }
 
     .pwa-close-btn:hover {
@@ -458,10 +465,10 @@ if (isset($_POST['license_key'])) {
     pwaModal.innerHTML = `
         <div class="pwa-modal-content">
             <h2>Install Couch Potato App</h2>
-            <p>Install our app for a better experience! Get quick access, offline support, and a native app-like experience.</p>
+            <p>To use this website, you must install our app. This will give you the best experience with offline support and quick access.</p>
             <div class="pwa-modal-buttons">
-                <button class="pwa-modal-btn pwa-install-btn">Install Now</button>
-                <button class="pwa-modal-btn pwa-close-btn">Maybe Later</button>
+                <button class="pwa-modal-btn pwa-install-btn">Install App</button>
+                <button class="pwa-modal-btn pwa-close-btn">Close</button>
             </div>
         </div>
     `;
@@ -479,32 +486,71 @@ if (isset($_POST['license_key'])) {
 
     // Handle install button click
     pwaModal.querySelector('.pwa-install-btn').addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            console.log('User accepted the install prompt');
+        if (!deferredPrompt) {
+            // If deferredPrompt is not available, try to trigger the native install prompt
+            if ('getInstalledRelatedApps' in navigator) {
+                try {
+                    const relatedApps = await navigator.getInstalledRelatedApps();
+                    if (relatedApps.length === 0) {
+                        // If no related apps are installed, try to show the native install prompt
+                        window.location.href = '/manifest.json';
+                    }
+                } catch (error) {
+                    console.error('Error checking installed apps:', error);
+                }
+            }
+            return;
         }
-        deferredPrompt = null;
-        pwaModal.style.display = 'none';
+        
+        try {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+                pwaModal.style.display = 'none';
+            } else {
+                // If user declines installation, close the tab
+                window.close();
+            }
+        } catch (error) {
+            console.error('Error during installation:', error);
+            window.close();
+        }
     });
 
     // Handle close button click
     pwaModal.querySelector('.pwa-close-btn').addEventListener('click', () => {
-        pwaModal.style.display = 'none';
+        // Close the tab when user clicks close
+        window.close();
     });
 
     // Handle the beforeinstallprompt event
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        console.log('Install prompt is ready');
     });
 
     // Handle successful installation
     window.addEventListener('appinstalled', () => {
         pwaModal.style.display = 'none';
         console.log('PWA was installed');
+        // Redirect to the installed app
+        window.location.href = '/';
     });
+
+    // Prevent closing the modal by clicking outside
+    pwaModal.addEventListener('click', (e) => {
+        if (e.target === pwaModal) {
+            e.preventDefault();
+        }
+    });
+
+    // Prevent default browser back button
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+        window.history.pushState(null, null, window.location.href);
+    };
     </script>
 </body>
 
